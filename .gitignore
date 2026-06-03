@@ -3,11 +3,19 @@
 
 **/.terraform/
 
+**/.terraform.lock.hcl
+
+*.tfplan
+
+tfplan
+
 *.tfstate
 
 *.tfstate.backup
 
 *.tfvars
+
+*.tfvars.json
 
 !*.tfvars.example
 
