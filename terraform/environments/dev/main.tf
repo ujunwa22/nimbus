@@ -85,3 +85,65 @@ output "backend_repo_url" {
 output "frontend_repo_url" {
   value = module.ecr.frontend_repo_url
 }
+
+#RDS
+module "rds" {
+  source = "../../modules/rds"
+
+  project               = local.project
+  env                   = local.env
+  vpc_id                = module.vpc.vpc_id
+  isolated_subnet_ids   = module.vpc.isolated_subnet_ids
+  ecs_security_group_id = module.ecs.ecs_security_group_id
+  db_password           = var.db_password
+  tags                  = local.tags
+}
+
+#Secrets
+
+module "secrets" {
+  source = "../../modules/secrets"
+
+  project     = local.project
+  env         = local.env
+  db_password = var.db_password
+  jwt_secret  = var.jwt_secret
+  tags        = local.tags
+}
+
+# IAM
+
+module "iam" {
+  source = "../../modules/iam"
+
+  project        = local.project
+  env            = local.env
+  aws_account_id = var.aws_account_id
+  github_repo    = var.github_repo
+  tags           = local.tags
+}
+
+output "db_endpoint" {
+  value     = module.rds.db_endpoint
+  sensitive = true
+}
+
+output "ecs_execution_role_arn" {
+  value = module.iam.ecs_execution_role_arn
+}
+
+output "ecs_task_role_arn" {
+  value = module.iam.ecs_task_role_arn
+}
+
+output "github_actions_role_arn" {
+  value = module.iam.github_actions_role_arn
+}
+
+output "db_password_arn" {
+  value = module.secrets.db_password_arn
+}
+
+output "jwt_secret_arn" {
+  value = module.secrets.jwt_secret_arn
+}
