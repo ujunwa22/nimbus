@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { box-sizing: border-box; }
+
+  body {
+    background-color: #0a0f1e;
+    color: #e5e7eb;
+    font-family: 'DM Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Syne', sans-serif;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-nimbus-card border border-nimbus-border rounded-2xl p-6;
+  }
+
+  .btn-primary {
+    @apply bg-nimbus-accent text-nimbus-dark font-semibold px-5 py-2.5 rounded-xl
+           hover:bg-sky-400 transition-all duration-200 font-display text-sm;
+  }
+
+  .btn-secondary {
+    @apply bg-nimbus-border text-gray-300 font-semibold px-5 py-2.5 rounded-xl
+           hover:bg-gray-700 transition-all duration-200 font-display text-sm;
+  }
+
+  .btn-ghost {
+    @apply text-gray-400 hover:text-white px-4 py-2 rounded-xl
+           hover:bg-nimbus-border transition-all duration-200 text-sm;
+  }
+
+  .input {
+    @apply w-full bg-nimbus-dark border border-nimbus-border rounded-xl px-4 py-3
+           text-gray-200 placeholder-gray-600 focus:outline-none
+           focus:border-nimbus-accent transition-colors duration-200 text-sm;
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg
+           text-xs font-semibold font-mono;
+  }
+
+  .badge-blue  {
+    @apply badge bg-sky-900/50 text-sky-400 border border-sky-800/50;
+  }
+
+  .badge-green {
+    @apply badge bg-emerald-900/50 text-emerald-400 border border-emerald-800/50;
+  }
+
+  .badge-gold {
+    @apply badge bg-amber-900/50 text-amber-400 border border-amber-800/50;
+  }
+
+  .badge-red {
+    @apply badge bg-red-900/50 text-red-400 border border-red-800/50;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0a0f1e; }
+::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #374151; }
+
+/* Animations */
+.animate-in {
+  animation: fadeUp 0.4s ease forwards;
+}
+.animate-in-delay-1 {
+  animation: fadeUp 0.4s ease 0.1s forwards;
+  opacity: 0;
+}
+.animate-in-delay-2 {
+  animation: fadeUp 0.4s ease 0.2s forwards;
+  opacity: 0;
+}
+.animate-in-delay-3 {
+  animation: fadeUp 0.4s ease 0.3s forwards;
+  opacity: 0;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
