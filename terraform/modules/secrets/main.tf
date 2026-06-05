@@ -3,7 +3,7 @@
 resource "aws_secretsmanager_secret" "db_password" {
   name                    = "${var.project}/${var.env}/db-password"
   description             = "Nimbus RDS master password"
-  recovery_window_in_days = var.env == "prod" ? 7 : 0
+  recovery_window_in_days = var.env == 0
 
   tags = var.tags
 }
@@ -18,7 +18,7 @@ resource "aws_secretsmanager_secret_version" "db_password" {
 resource "aws_secretsmanager_secret" "jwt_secret" {
   name                    = "${var.project}/${var.env}/jwt-secret"
   description             = "Nimbus JWT signing secret"
-  recovery_window_in_days = var.env == "prod" ? 7 : 0
+  recovery_window_in_days = var.env == 0
 
   tags = var.tags
 }

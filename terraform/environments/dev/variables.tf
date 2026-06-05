@@ -21,12 +21,6 @@ variable "github_repo" {
   type = string
 }
 
-
-variable "acm_certificate_arn" {
-  type = string
-}
-
-
 variable "alarm_email" {
   type = string
 }

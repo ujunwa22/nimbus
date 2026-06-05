@@ -28,13 +28,13 @@ resource "aws_ecs_cluster_capacity_providers" "main" {
 
 resource "aws_cloudwatch_log_group" "backend" {
   name              = "/ecs/${var.project}-backend-${var.env}"
-  retention_in_days = var.env == "prod" ? 30 : 7
+  retention_in_days = 7
   tags              = var.tags
 }
 
 resource "aws_cloudwatch_log_group" "frontend" {
   name              = "/ecs/${var.project}-frontend-${var.env}"
-  retention_in_days = var.env == "prod" ? 30 : 7
+  retention_in_days =  7
   tags              = var.tags
 }
 
