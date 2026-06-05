@@ -105,7 +105,7 @@ resource "aws_ecs_task_definition" "backend" {
 
     secrets = [
   { name = "JWT_SECRET",   valueFrom = var.jwt_secret_arn },
-  { name = "DATABASE_URL", valueFrom = var.db_url_secret_arn }
+  { name = "DATABASE_PASSWORD", valueFrom = var.db_password_arn }
 ]
 
     logConfiguration = {
