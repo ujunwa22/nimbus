@@ -20,3 +20,7 @@ variable "aws_account_id" {
 variable "github_repo" {
   type = string
 }
+
+variable "alarm_email" {
+  type = string
+}
