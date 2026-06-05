@@ -130,7 +130,7 @@ module "ecs" {
   ecs_task_role_arn         = module.iam.ecs_task_role_arn
   backend_image             = module.ecr.backend_repo_url
   frontend_image            = module.ecr.frontend_repo_url
-  db_url_secret_arn         = module.secrets.db_url_secret_arn
+  db_password_arn           = module.secrets.db_password_arn
   jwt_secret_arn            = module.secrets.jwt_secret_arn
   alb_dns_name              = module.alb.alb_dns_name
   rds_security_group_id     = module.rds.rds_security_group_id
