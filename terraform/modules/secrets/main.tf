@@ -27,3 +27,16 @@ resource "aws_secretsmanager_secret_version" "jwt_secret" {
   secret_id     = aws_secretsmanager_secret.jwt_secret.id
   secret_string = var.jwt_secret
 }
+
+# Full Database URL Secret
+resource "aws_secretsmanager_secret" "db_url" {
+  name                    = "${var.project}/${var.env}/db-url"
+  description             = "Nimbus full database connection URL"
+  recovery_window_in_days = 0
+  tags                    = var.tags
+}
+
+resource "aws_secretsmanager_secret_version" "db_url" {
+  secret_id     = aws_secretsmanager_secret.db_url.id
+  secret_string = "postgresql://${var.db_username}:${var.db_password}@${var.db_host}:5432/${var.db_name}"
+}

@@ -18,7 +18,7 @@ resource "aws_ecs_cluster_capacity_providers" "main" {
   capacity_providers = ["FARGATE"]
 
   default_capacity_provider_strategy {
-    capacity_provider = ["FARGATE"] 
+    capacity_provider = "FARGATE" 
     weight            = 1
     base              = 1
   }
@@ -105,7 +105,7 @@ resource "aws_ecs_task_definition" "backend" {
 
     secrets = [
   { name = "JWT_SECRET",   valueFrom = var.jwt_secret_arn },
-  { name = "DATABASE_PASSWORD", valueFrom = var.db_password_arn }
+  { name = "DATABASE_URL", valueFrom = var.db_url_secret_arn }
 ]
 
     logConfiguration = {
@@ -182,7 +182,7 @@ resource "aws_ecs_service" "backend" {
   desired_count   = var.backend_desired_count
 
   capacity_provider_strategy {
-    capacity_provider = ["FARGATE"]
+    capacity_provider = "FARGATE"
     weight            = 1
     base              = 1
   }
@@ -225,7 +225,7 @@ resource "aws_ecs_service" "frontend" {
   desired_count   = var.frontend_desired_count
 
   capacity_provider_strategy {
-    capacity_provider = ["FARGATE"]
+    capacity_provider = "FARGATE"
     weight            = 1
     base              = 1
   }

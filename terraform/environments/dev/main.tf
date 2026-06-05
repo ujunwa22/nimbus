@@ -82,6 +82,9 @@ module "secrets" {
   project     = local.project
   env         = local.env
   db_password = var.db_password
+  db_username = "nimbus_user"
+  db_host     = module.rds.db_host
+  db_name     = "nimbus_db"
   jwt_secret  = var.jwt_secret
   tags        = local.tags
 }
@@ -130,7 +133,7 @@ module "ecs" {
   ecs_task_role_arn         = module.iam.ecs_task_role_arn
   backend_image             = module.ecr.backend_repo_url
   frontend_image            = module.ecr.frontend_repo_url
-  db_password_arn           = module.secrets.db_password_arn
+  db_url_secret_arn         = module.secrets.db_url_secret_arn
   jwt_secret_arn            = module.secrets.jwt_secret_arn
   alb_dns_name              = module.alb.alb_dns_name
   rds_security_group_id     = module.rds.rds_security_group_id
@@ -143,6 +146,22 @@ module "ecs" {
   backend_max_count         = 2
   tags                      = local.tags
 }
+
+#Cloudwatch
+ module "cloudwatch" {
+  source = "../../modules/cloudwatch"
+  project                         = local.project
+  env                             = local.env
+  aws_account_id                  = var.aws_account_id
+  aws_region                      = var.aws_region
+  alarm_email                     = var.alarm_email
+  alb_arn_suffix                  = module.alb.alb_arn_suffix
+  backend_target_group_arn_suffix = module.alb.backend_target_group_arn_suffix
+  ecs_cluster_name                = module.ecs.cluster_name
+  backend_service_name            = module.ecs.backend_service_name
+  db_instance_id                  = module.rds.db_instance_id
+  tags                            = local.tags
+  }
 
 
 # ── Outputs ───────────────────────────────────────────────────

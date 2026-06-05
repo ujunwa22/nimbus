@@ -41,11 +41,11 @@ resource "aws_db_subnet_group" "main" {
 
 resource "aws_db_parameter_group" "postgres" {
   name   = "${var.project}-pg-${var.env}"
-  family = "postgres15"
+  family = "postgres18"
 
   parameter {
     name  = "log_connections"
-    value = "1"
+    value = "authentication"
   }
 
   tags = var.tags
@@ -56,7 +56,7 @@ resource "aws_db_instance" "postgres" {
   identifier = "${var.project}-db-${var.env}"
 
   engine         = "postgres"
-  engine_version = "15.4"
+  engine_version = "18"
   instance_class = var.db_instance_class
 
   db_name  = var.db_name
@@ -72,17 +72,17 @@ resource "aws_db_instance" "postgres" {
   storage_type          = "gp3"
   storage_encrypted     = true
 
-  backup_retention_period = var.env == "prod" ? 7 : 1
+  backup_retention_period = 1
   backup_window           = "03:00-04:00"
-  maintenance_window      = "Mon:04:00-Mon:05:00"
+  maintenance_window      = "Mon:04:00-Mon:06:00"
 
-  deletion_protection    = var.env == "prod"
-  skip_final_snapshot    = var.env != "prod"
-  final_snapshot_identifier = var.env == "prod" ? "${var.project}-final-${var.env}" : null
+  deletion_protection    = false
+  skip_final_snapshot    = false
+  final_snapshot_identifier = "${var.project}-final-${var.env}"
 
-  multi_az            = var.env == "prod"
+  multi_az            = true
   publicly_accessible = false
-  apply_immediately   = var.env != "prod"
+  apply_immediately   = true
 
   tags = merge(var.tags, {
     Name = "${var.project}-db-${var.env}"
