@@ -1,0 +1,17 @@
+node_modules
+.env
+prisma/migrations
+*.log
+# Terraform
+*.tf
+*.tfvars
+*.tfstate
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+
+# Other noise
+.git/
+.github/
+*.md
+.env.*

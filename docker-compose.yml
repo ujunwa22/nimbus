@@ -10,20 +10,39 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   backend:
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: backend/Dockerfile
     restart: always
     ports:
       - "5000:5000"
     environment:
       DATABASE_URL: ${DATABASE_URL}
-      NODE_ENV: development
+      NODE_ENV: ${NODE_ENV:-development}
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     command: sh -c "npx prisma migrate deploy && node src/index.js"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend/Dockerfile
+      args:
+        VITE_API_URL: ${FRONTEND_URL}
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
 
 volumes:
   pgdata:
