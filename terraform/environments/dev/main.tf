@@ -52,38 +52,13 @@ module "vpc" {
   tags               = local.tags
 }
 
-# ── ECR ───────────────────────────────────────────────────────
+# ECR
 module "ecr" {
   source = "../../modules/ecr"
 
   project = local.project
   env     = local.env
   tags    = local.tags
-}
-
-# ── Outputs ───────────────────────────────────────────────────
-output "vpc_id" {
-  value = module.vpc.vpc_id
-}
-
-output "public_subnet_ids" {
-  value = module.vpc.public_subnet_ids
-}
-
-output "private_subnet_ids" {
-  value = module.vpc.private_subnet_ids
-}
-
-output "isolated_subnet_ids" {
-  value = module.vpc.isolated_subnet_ids
-}
-
-output "backend_repo_url" {
-  value = module.ecr.backend_repo_url
-}
-
-output "frontend_repo_url" {
-  value = module.ecr.frontend_repo_url
 }
 
 #RDS
@@ -111,6 +86,7 @@ module "secrets" {
   tags        = local.tags
 }
 
+
 # IAM
 
 module "iam" {
@@ -121,6 +97,77 @@ module "iam" {
   aws_account_id = var.aws_account_id
   github_repo    = var.github_repo
   tags           = local.tags
+}
+
+
+#ALB
+
+module "alb" {
+  source = "../../modules/alb"
+
+  project             = local.project
+  env                 = local.env
+  vpc_id              = module.vpc.vpc_id
+  public_subnet_ids   = module.vpc.public_subnet_ids
+  tags                = local.tags
+}
+
+
+#ECS
+
+module "ecs" {
+  source = "../../modules/ecs"
+
+  project                   = local.project
+  env                       = local.env
+  aws_region                = var.aws_region
+  vpc_id                    = module.vpc.vpc_id
+  private_subnet_ids        = module.vpc.private_subnet_ids
+  alb_security_group_id     = module.alb.alb_security_group_id
+  backend_target_group_arn  = module.alb.backend_target_group_arn
+  frontend_target_group_arn = module.alb.frontend_target_group_arn
+  ecs_execution_role_arn    = module.iam.ecs_execution_role_arn
+  ecs_task_role_arn         = module.iam.ecs_task_role_arn
+  backend_image             = module.ecr.backend_repo_url
+  frontend_image            = module.ecr.frontend_repo_url
+  db_url_secret_arn         = module.secrets.db_url_secret_arn
+  jwt_secret_arn            = module.secrets.jwt_secret_arn
+  alb_dns_name              = module.alb.alb_dns_name
+  rds_security_group_id     = module.rds.rds_security_group_id
+  backend_cpu               = 256
+  backend_memory            = 512
+  frontend_cpu              = 256
+  frontend_memory           = 512
+  backend_desired_count     = 1
+  frontend_desired_count    = 1
+  backend_max_count         = 2
+  tags                      = local.tags
+}
+
+
+# ── Outputs ───────────────────────────────────────────────────
+output "vpc_id" {
+  value = module.vpc.vpc_id
+}
+
+output "public_subnet_ids" {
+  value = module.vpc.public_subnet_ids
+}
+
+output "private_subnet_ids" {
+  value = module.vpc.private_subnet_ids
+}
+
+output "isolated_subnet_ids" {
+  value = module.vpc.isolated_subnet_ids
+}
+
+output "backend_repo_url" {
+  value = module.ecr.backend_repo_url
+}
+
+output "frontend_repo_url" {
+  value = module.ecr.frontend_repo_url
 }
 
 output "db_endpoint" {
@@ -146,4 +193,20 @@ output "db_password_arn" {
 
 output "jwt_secret_arn" {
   value = module.secrets.jwt_secret_arn
+}
+
+output "alb_dns_name" {
+  value = module.alb.alb_dns_name
+}
+
+output "cluster_name" {
+  value = module.ecs.cluster_name
+}
+
+output "backend_service_name" {
+  value = module.ecs.backend_service_name
+}
+
+output "frontend_service_name" {
+  value = module.ecs.frontend_service_name
 }
