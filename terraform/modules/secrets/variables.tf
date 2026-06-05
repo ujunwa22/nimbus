@@ -20,3 +20,16 @@ variable "tags" {
   type    = map(string)
   default = {}
 }
+
+variable "db_username" { 
+  type = string  
+  default = "nimbus_user" 
+}
+variable "db_host" {
+   type = string 
+}
+
+variable "db_name" {
+   type = string  
+   default = "nimbus_db" 
+}

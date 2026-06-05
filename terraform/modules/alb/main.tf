@@ -105,7 +105,7 @@ resource "aws_lb_listener" "http" {
 # Routing Rule — /api/* goes to backend
 
 resource "aws_lb_listener_rule" "api" {
-  listener_arn = aws_lb_listener.https.arn
+  listener_arn = aws_lb_listener.http.arn
   priority     = 100
 
   action {
