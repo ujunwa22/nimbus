@@ -100,6 +100,7 @@ module "iam" {
   aws_account_id = var.aws_account_id
   github_repo    = var.github_repo
   tags           = local.tags
+  aws_region     = var.aws_region
 }
 
 
