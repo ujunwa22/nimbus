@@ -209,12 +209,10 @@ output "github_actions_role_arn" {
 
 output "db_password_arn" {
   value = module.secrets.db_password_arn
-  sensitive =true
 }
 
 output "jwt_secret_arn" {
   value = module.secrets.jwt_secret_arn
-  sensitive = true
 }
 
 output "alb_dns_name" {
