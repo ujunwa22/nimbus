@@ -80,7 +80,8 @@ jobs:
           else
             echo "env=dev" >> $GITHUB_OUTPUT
           fi
-
+      - name: Debug env output
+        run: echo "ENV is ${{ steps.env.outputs.env }}"
       - name: Configure AWS credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
