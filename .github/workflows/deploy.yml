@@ -80,11 +80,12 @@ jobs:
           else
             echo "env=dev" >> $GITHUB_OUTPUT
           fi
-
+      - name: Debug env output
+        run: echo "ENV is ${{ steps.env.outputs.env }}"
       - name: Configure AWS credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/nimbus-github-actions-dev
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/nimbus-github-actions-${{ steps.env.outputs.env }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
