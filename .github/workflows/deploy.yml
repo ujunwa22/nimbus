@@ -194,7 +194,7 @@ jobs:
             --max-time 10 \
             --retry 5 \
             --retry-delay 10 \
-            $ALB_URL/api/health)
+            $ALB_URL/health)
 
           echo "Health check status: $STATUS"
 
@@ -220,6 +220,10 @@ jobs:
           fi
 
           echo "Health check PASSED — deployment successful"
+      - name: Smoke test
+        run: |
+          echo "Hitting: $ALB_DNS_NAME"
+          curl -f http://$ALB_DNS_NAME/health
 
       - name: Deployment summary
         run: |
