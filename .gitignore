@@ -1,0 +1,45 @@
+
+# Terraform
+
+**/.terraform/
+
+**/.terraform.lock.hcl
+
+*.tfplan
+
+tfplan
+
+*.tfstate
+
+*.tfstate.backup
+
+*.tfvars
+
+*.tfvars.json
+
+!*.tfvars.example
+
+crash.log
+
+# Secrets
+
+.env
+
+*.pem
+
+*.key
+
+# Node
+
+node_modules/
+
+dist/
+
+# OS
+
+.DS_Store
+
+
+# VS code
+
+.vscode/
