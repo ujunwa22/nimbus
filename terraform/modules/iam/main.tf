@@ -147,13 +147,12 @@ resource "aws_iam_role_policy" "github_actions_deploy" {
       },
       {
        Effect ="Allow"
-       Actions = [
+       Action = [
         "ecs:ListTasks",
         "ecs:DescribeTasks",
         "logs:GetLogEvents",
         "logs:FilterLogEvents",
-        "logs:DescribelogStreams",
-        "logs:TailLogEvents"
+        "logs:DescribeLogStreams"
       ]
       Resource = "*"
       }
