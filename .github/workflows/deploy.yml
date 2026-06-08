@@ -252,7 +252,7 @@ jobs:
       - name: Smoke test failure reason
         run: |
           echo "Hitting: $ALB_DNS_NAME"
-          curl -f http://$ALB_DNS_NAME/health
+          curl -f http://$ALB_DNS_NAME/api/health
 
       - name: Deployment summary
         run: |
