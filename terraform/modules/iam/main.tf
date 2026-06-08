@@ -144,6 +144,18 @@ resource "aws_iam_role_policy" "github_actions_deploy" {
             "iam:PassedToService" = "ecs-tasks.amazonaws.com"
           }
         }
+      },
+      {
+       Effect ="Allow"
+       Actions = [
+        "ecs:ListTasks",
+        "ecs:DescribeTasks",
+        "logs:GetLogEvents",
+        "logs:FilterLogEvents",
+        "logs:DescribelogStreams",
+        "logs:TailLogEvents"
+      ]
+      Resource = "*"
       }
     ]
   })
