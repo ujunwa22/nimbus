@@ -80,8 +80,10 @@ jobs:
           else
             echo "env=dev" >> $GITHUB_OUTPUT
           fi
+
       - name: Debug env output
         run: echo "ENV is ${{ steps.env.outputs.env }}"
+
       - name: Configure AWS credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -181,6 +183,33 @@ jobs:
             --region ${{ env.AWS_REGION }}
           echo "Frontend is stable"
 
+      - name: Dump ECS failure logs
+        if: failure()
+        run: |
+          echo "========== ECS FAILURE DIAGNOSTICS =========="
+
+          TASK_ARN=$(aws ecs list-tasks \
+            --cluster ${{ env.PROJECT }}-cluster-${{ needs.build-and-push.outputs.env }} \
+            --service-name ${{ env.PROJECT }}-backend-${{ needs.build-and-push.outputs.env }} \
+            --desired-status STOPPED \
+            --region ${{ env.AWS_REGION }} \
+            --query 'taskArns[0]' \
+            --output text)
+
+          echo "Failed task ARN: $TASK_ARN"
+
+          aws ecs describe-tasks \
+            --cluster ${{ env.PROJECT }}-cluster-${{ needs.build-and-push.outputs.env }} \
+            --tasks $TASK_ARN \
+            --region ${{ env.AWS_REGION }} \
+            --query 'tasks[0].{stopCode:stopCode, stoppedReason:stoppedReason, containers:containers[*].{name:name, reason:reason, exitCode:exitCode}}' \
+            --output json
+
+          echo "========== CONTAINER LOGS (last 10 min) =========="
+          aws logs tail /ecs/${{ env.PROJECT }}-backend-${{ needs.build-and-push.outputs.env }} \
+            --since 10m \
+            --region ${{ env.AWS_REGION }} || echo "No logs found (log group may differ)"
+
       - name: Smoke test — health check
         run: |
           echo "Running smoke test..."
@@ -220,10 +249,6 @@ jobs:
           fi
 
           echo "Health check PASSED — deployment successful"
-      - name: Smoke test
-        run: |
-          echo "Hitting: $ALB_DNS_NAME"
-          curl -f http://$ALB_DNS_NAME/api/health
 
       - name: Deployment summary
         run: |
