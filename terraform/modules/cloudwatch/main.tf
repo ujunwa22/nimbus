@@ -147,7 +147,7 @@ resource "aws_cloudwatch_metric_alarm" "high_error_rate" {
   namespace           = "AWS/ApplicationELB"
   period              = 60
   statistic           = "Sum"
-  threshold           = 10
+  threshold           = 1
   alarm_description   = "5xx errors exceeded threshold"
   alarm_actions       = [aws_sns_topic.alarms.arn]
   ok_actions          = [aws_sns_topic.alarms.arn]
@@ -190,7 +190,7 @@ resource "aws_cloudwatch_metric_alarm" "ecs_task_count" {
 resource "aws_cloudwatch_metric_alarm" "high_latency" {
   alarm_name          = "${var.project}-high-latency-${var.env}"
   comparison_operator = "GreaterThanThreshold"
-  evaluation_periods  = 3
+  evaluation_periods  = 2
   metric_name         = "TargetResponseTime"
   namespace           = "AWS/ApplicationELB"
   period              = 60

@@ -180,6 +180,7 @@ resource "aws_ecs_service" "backend" {
   cluster         = aws_ecs_cluster.main.id
   task_definition = aws_ecs_task_definition.backend.arn
   desired_count   = var.backend_desired_count
+  health_check_grace_period_seconds = 120
 
   capacity_provider_strategy {
     capacity_provider = "FARGATE"
@@ -223,6 +224,8 @@ resource "aws_ecs_service" "frontend" {
   cluster         = aws_ecs_cluster.main.id
   task_definition = aws_ecs_task_definition.frontend.arn
   desired_count   = var.frontend_desired_count
+  health_check_grace_period_seconds = 120
+  
 
   capacity_provider_strategy {
     capacity_provider = "FARGATE"
